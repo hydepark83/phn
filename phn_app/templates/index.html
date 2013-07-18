@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Personal Health News App</title>
+    <meta name="viewport" content="user-scalable=no, width=device-width"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="stylesheet" type="text/css" href="/static/iphone.css" media="screen"/>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.css" />
+    <script src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js"></script>
+</head>
+
+  <body>
+    <section data-role="page" data-theme="a">
+    <header data-role="header">
+        <h1 class="ui-btn-text">Your Personal News</h1>
+    </header>
+    <div data-role="content" class="content" align="left">
+        </p>
+                {% if user.username and has_disease %}
+                        <p>You have preffered list of diseases.
+                        Check out your Personalized Health News: </p>
+                <ul data-role="listview"  data-inset="true">
+                        {% for disease in risk_disease %}
+                        <li>
+                        <h><a href="/phn/{{disease.disease_id}}">{{disease.disease_name}}</a></h>
+                        </li>
+                        {% endfor %}
+                </ul>
+		{% else %}
+                  	<p> We don't have your Preffered Disease List in our database. <br>
+		  	Please select topics below so we can start serveing Personalized Health News for you </p>
+		  	<br>
+			<form method="get" action="/update_user_disease_list">
+				<div data-role="fieldcontain">
+				<label for="disease_list" class="select">Choose Diseases:</label><br>
+				<select name="disease_list" multiple="multiple" data-native-menu="false">
+				{% for ds_id, ds_nm in disease_list %}
+					<option value="{{ds_id}}">{{ds_nm}}</option>
+		  		{% endfor %}
+				</select>
+				</div>
+			<input type="submit" value="Submit" />
+			<!--{% csrf_token %}  -->
+			</form>
+                {% endif %}
+        <div><br>
+  </section>
+
+</body>
+</html>
+

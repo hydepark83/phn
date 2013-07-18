@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Personal Health News App</title>
+    <meta name="viewport" content="user-scalable=no, width=device-width"/>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="stylesheet" type="text/css" href="/static/phone.css" media="screen"/>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.css" />
+    <script src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.0a4.1/jquery.mobile-1.0a4.1.min.js"></script>
+    <script type="text/javascript" src="/static/carouFredSel-6.2.1/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="/static/carouFredSel-6.2.1/jquery.carouFredSel-6.2.1.js"></script>
+    <script>
+	$(document).ready(function() {
+	$("#container").carouFredSel({
+		items				: 3,
+		direction			:"left",
+		scroll : {
+			items			: 1,
+			easing			: "elastic",
+			duration		: 1000,							
+			pauseOnHover	: true
+		},
+		wipe		: {
+		onTouch		: true,
+		onMouse		: true
+		},					
+		auto        : false
+	});	
+	});
+    </script>
+</head>
+
+  <body>
+    <section data-role="page" data-theme="a">
+    <header data-role="header">
+        <a href="/logout" data-rol="button" data-icon="gear" data-iconpos"left" data-inline="true">Logout</a>
+    </header>
+	{% if has_disease and user %}
+	<div id="view">
+		{% for disease in risk_disease %}
+		<br>
+		{{disease.disease_name}} 
+		<div id="container">
+			{% for key, values in risk_disease_news.iteritems %}
+				{% if key == disease.disease_id %}
+					{% for news in values %}
+					<div id= "content">
+					{{news|safe}}
+					</div>
+					{% endfor %}
+				{% endif %}
+			{% endfor %}
+		</div>
+		{% endfor %}
+	</div>
+
+	{% else %}
+        	<p> We don't have your Preffered Disease List in our database. <br>
+                Please select topics below so we can start serveing Personalized Health News for you </p>
+                <br>
+                <form method="get" action="/update_user_disease_list">
+                <div data-role="fieldcontain">
+                	<label for="disease_list" class="select">Choose Diseases:</label><br>
+             	   	<select name="disease_list" multiple="multiple" data-native-menu="false">
+                	{% for ds_id, ds_nm in disease_list %}
+                	<option value="{{ds_id}}">{{ds_nm}}</option>
+                	{% endfor %}
+                	</select>
+                </div>
+                <input type="submit" value="Submit" />
+                <!--{% csrf_token %}  -->
+                </form>
+         {% endif %}
+  </section>
+
+</body>
+</html>
+
+
+
